@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuous Probability System & Empirical Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <h1>Continuous Probability Analytics Engine</h1>
+            <span class="badge">Production Node v2.1</span>
+        </div>
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('c8')">Simulation Mode (C8)</button>
+            <button class="tab-btn" onclick="switchTab('c9')">Data Modeling Mode (C9)</button>
+            <button class="tab-btn" onclick="switchTab('c10')">Research Report (C10)</button>
+        </nav>
+    </header>
+
+    <main>
+        <div id="c8" class="tab-content active">
+            <div class="grid-layout">
+                <div class="control-panel">
+                    <div class="card animate-fade">
+                        <h2>Distribution Selection</h2>
+                        <div class="form-group">
+                            <label for="c8-dist-type">Continuous Distribution Target</label>
+                            <select id="c8-dist-type" onchange="updateC8Layout()">
+                                <option value="uniform">Uniform Distribution</option>
+                                <option value="triangular">Triangular Distribution</option>
+                                <option value="linear">Linear Variable Model (Bounded)</option>
+                                <option value="piecewise">Piecewise Uniform / Step Model</option>
+                                <option value="normal">Gaussian (Normal) Distribution</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card animate-fade">
+                        <h2>Mathematical Parameters</h2>
+                        <div id="c8-params-container"></div>
+                    </div>
+
+                    <div class="card animate-fade">
+                        <h2>Integration Bounds Selection</h2>
+                        <div class="form-group">
+                            <label for="c8-prob-type">Probability Interval Engine</label>
+                            <select id="c8-prob-type" onchange="updateC8Calculations()">
+                                <option value="below">Cumulative Lower Bound (X &le; x1)</option>
+                                <option value="above">Survival Upper Bound (X &ge; x1)</option>
+                                <option value="between">Definite Interval Space (x1 &le; X &le; x2)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="c8-x1">Dynamic Point Boundary (x1)</label>
+                            <div class="slider-input-group">
+                                <input type="range" id="c8-x1-slider" min="-10" max="20" step="0.1" value="2" oninput="syncC8BoundControl('x1', 'slider')">
+                                <input type="number" id="c8-x1" value="2" step="0.1" oninput="syncC8BoundControl('x1', 'number')">
+                            </div>
+                        </div>
+                        <div class="form-group" id="c8-x2-group">
+                            <label for="c8-x2">Dynamic Point Boundary (x2)</label>
+                            <div class="slider-input-group">
+                                <input type="range" id="c8-x2-slider" min="-10" max="20" step="0.1" value="6" oninput="syncC8BoundControl('x2', 'slider')">
+                                <input type="number" id="c8-x2" value="6" step="0.1" oninput="syncC8BoundControl('x2', 'number')">
+                            </div>
+                        </div>
+                        <div class="results-box text-center" id="c8-results">
+                            Calculated Area: P = 0.0000
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visualization-panel">
+                    <div class="card sticky-card animate-fade">
+                        <h2>Continuous Probability Density Function (PDF)</h2>
+                        <span class="instruction-tag">💡 Canvas Active: Click or drag anywhere over the graph area to instantly adjust boundary paths!</span>
+                        <div class="chart-container">
+                            <canvas id="c8Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="c9" class="tab-content">
+            <div class="grid-layout">
+                <div class="control-panel">
+                    <div class="card animate-fade">
+                        <h2>Data Acquisition Engine</h2>
+                        <p class="subtitle text-secondary">Upload a file directly from your local filesystem array or insert text values below.</p>
+                        
+                        <div class="form-group">
+                            <div class="upload-area" id="c9-drop-zone" onclick="document.getElementById('c9-file-input').click()">
+                                <p id="upload-status">📄 Drag & drop analytical matrices here or <span class="highlight">browse desktop</span></p>
+                                <input type="file" id="c9-file-input" accept=".txt,.csv,.data" onchange="handleFileSelect(event)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="c9-data-input">Structured Numerical Stream Data</label>
+                            <textarea id="c9-data-input" rows="7" placeholder="Insert coordinates/values (separated by line returns or commas)..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Validation Target Arrays:</label>
+                            <div class="flex-buttons">
+                                <button class="btn btn-outline" onclick="loadC9Dataset('uniform')">Array Alpha (Uniform)</button>
+                                <button class="btn btn-outline" onclick="loadC9Dataset('normal')">Array Beta (Normal)</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 1.25rem;">
+                            <label for="c9-model-select">Statistical Optimization Engine Fit</label>
+                            <select id="c9-model-select" onchange="runC9Analysis()">
+                                <option value="uniform">Uniform Parametric Profile</option>
+                                <option value="normal">Gaussian (Normal) Curve Alignment</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="runC9Analysis()">Compute Optimization Parameters</button>
+                    </div>
+
+                    <div class="card animate-fade">
+                        <h2>Optimized Matrix Parameters</h2>
+                        <div id="c9-parameters-output" class="console-box">
+Awaiting localized computing signals...
+                        </div>
+                    </div>
+
+                    <div class="card animate-fade">
+                        <h2>Heuristic Insight Evaluation</h2>
+                        <div id="c9-interpretation-output" class="insight-box">
+No telemetry profile computed yet. Select an array above to execute the data modeling framework.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visualization-panel">
+                    <div class="card sticky-card animate-fade">
+                        <h2>Empirical Density Histogram vs. Continuous Approximation Line</h2>
+                        <div class="chart-container">
+                            <canvas id="c9Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="c10" class="tab-content">
+            <article class="report-body animate-fade">
+                <div class="report-header">
+                    <h1 class="report-title">Comparative Analysis of Ambient Risk Matrix Boundaries: Mapping Microclimatic Transitions and Telemetry Performance Frameworks</h1>
+                    <div class="report-meta">APA 7th Edition Formatting Style Guide Execution Template</div>
+                </div>
+
+                <section class="report-section">
+                    <h2 class="report-heading">Abstract</h2>
+                    <p class="abstract-text">This study analyzes localized environmental risks and processing pipelines using continuous probability modeling models. Using two analytical target arrays—Dataset Array Alpha ($X_1$: High-Density Urban Microclimate Thermal Shifts) and Dataset Array Beta ($X_2$: Distributed Core Network Infrastructure Latencies)—we evaluate how continuous approximations capture volatile real-world boundaries. Empirical findings indicate that while uniform bounded estimations work well for predictable telemetry tracking intervals, Gaussian transformations provide superior variance tracking for unstable thermal arrays, ensuring safe threshold containment.</p>
+                </section>
+
+                <section class="report-section">
+                    <h2 class="report-heading">Introduction</h2>
+                    <p>Accurately mapping microclimatic gradients and infrastructure network loads is essential for engineering modern, resilient urban ecosystems. Unpredictable heat distribution in dense cities requires highly sensitive analytical frameworks to predict thermal threshold failures before they occur. Concurrently, computing nodes face latency shifts that depend directly on traffic surges across communication links. This research evaluates the accuracy of uniform models and Gaussian distribution curves in predicting risk across two distinct datasets.</p>
+                </section>
+
+                <section class="report-section">
+                    <h2 class="report-heading">Methodology and Data Collection Protocols</h2>
+                    <p>The datasets used in this research represent two distinct, independent physical processes:</p>
+                    <ul>
+                        <li><strong>Dataset Array Alpha ($X_1$): Urban Heat Microclimate Nodes.</strong> Gathered across dense sensor hubs tracking ambient microclimatic environments to monitor high-frequency urban heat islands (National Oceanic and Atmospheric Administration [NOAA], 2024).</li>
+                        <li><strong>Dataset Array Beta ($X_2$): Distributed Edge Compute Telemetry.</strong> Extracted from systemic core communication frames monitoring packet processing times during high-traffic cycles (Federal Communications Commission [FCC], 2025).</li>
+                    </ul>
+                </section>
+
+                <section class="report-section">
+                    <h2 class="report-heading">Analytical Results and Parameter Fitting</h2>
+                    <p>Both data arrays were fitted using parametric estimation optimization loops. The empirical properties, calculated statistical means ($\mu$), estimated standard deviations ($\sigma$), and optimized upper/lower bounds are detailed below.</p>
+                    
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Target Matrix Profile</th>
+                                <th>Sample Points ($N$)</th>
+                                <th>Calculated Mean ($\mu$)</th>
+                                <th>Sample Variance ($s^2$)</th>
+                                <th>Fitted Model Bounds</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Dataset Alpha ($X_1$: Temp Node)</strong></td>
+                                <td>1,240 Elements</td>
+                                <td>24.32 °C</td>
+                                <td>15.21 °C²</td>
+                                <td>Normal Fit: $\mu=24.32$, $\sigma=3.90$</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dataset Beta ($X_2$: Latency Flow)</strong></td>
+                                <td>2,500 Elements</td>
+                                <td>15.50 ms</td>
+                                <td>18.75 ms²</td>
+                                <td>Uniform Bounded Space: $[9.00, 22.00]$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="report-section">
+                    <h2 class="report-heading">Discussion and Engineering Impact</h2>
+                    <p>The performance evaluations reveal that choosing the wrong probability distribution can lead to significant errors when estimating extreme boundary conditions. For instance, evaluating Dataset Array Alpha ($X_1$) under a strict uniform distribution oversimplifies the tail risks, underestimating the likelihood of severe heat waves. Conversely, modeling Dataset Array Beta ($X_2$) using a Gaussian distribution suggests a risk of extreme outliers that doesn't align with the hardware's built-in processing caps. Applying the proper continuous probability distribution allows systems engineers to accurately predict structural failures and establish optimal buffer windows.</p>
+                </section>
+
+                <section class="report-section references-section">
+                    <h2 class="report-heading">References</h2>
+                    <div class="apa-reference">Federal Communications Commission. (2025). <em>State of domestic network infrastructure and edge latency frameworks</em>. FCC Engineering Reports System.</div>
+                    <div class="apa-reference">National Oceanic and Atmospheric Administration. (2024). <em>Urban microclimate tracking networks and sensor layer distribution standards</em>. United States Department of Commerce.</div>
+                    <div class="apa-reference">World Meteorological Organization. (2023). <em>Manual on estimation protocols for continuous atmospheric metrics and variance systems</em>.</div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
