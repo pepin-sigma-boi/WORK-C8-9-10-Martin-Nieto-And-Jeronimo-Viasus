@@ -30,8 +30,8 @@ function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     
-    document.getElementById(tabId).classList.add('active');
     event.target.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
     
     if (tabId === 'c8') { updateC8Layout(); }
     if (tabId === 'c9') { runC9Analysis(); }
@@ -289,10 +289,11 @@ function processUploadedFile(file) {
 }
 
 function loadC9Dataset(type) {
-    // Injecting synthetic parameters modeling spatial distributions
+    // Injecting synthetic parameters modeling spatial distributions (Added triangular array)
     let datasets = {
         uniform: "10.2\n12.4\n15.1\n11.8\n18.3\n14.2\n19.7\n11.1\n16.4\n13.5\n17.9\n12.1\n15.6\n14.8\n16.2\n18.9\n10.5\n13.1\n17.2\n15.0",
-        normal: "22.1\n24.5\n28.2\n19.4\n23.8\n25.1\n31.4\n22.9\n26.7\n24.0\n18.1\ =n25.6\n23.2\n27.1\n21.5\n24.9\n29.3\n22.6\n25.8\n20.3"
+        triangular: "5.1\n6.8\n8.2\n9.5\n10.1\n11.4\n11.9\n12.5\n13.2\n14.0\n14.5\n15.2\n16.3\n17.1\n18.5\n19.2\n21.4\n22.8\n24.1\n25.0",
+        normal: "22.1\n24.5\n28.2\n19.4\n23.8\n25.1\n31.4\n22.9\n26.7\n24.0\n18.1\n25.6\n23.2\n27.1\n21.5\n24.9\n29.3\n22.6\n25.8\n20.3"
     };
     document.getElementById('c9-data-input').value = datasets[type];
     document.getElementById('c9-model-select').value = type;
@@ -324,6 +325,12 @@ function runC9Analysis() {
     logText += `Calculated Geometric Max : ${max.toFixed(3)}\n`;
     logText += `Estimated Sample Mean (μ): ${mean.toFixed(3)}\n`;
     logText += `Estimated Std Deviation (σ): ${stdDev.toFixed(3)}\n`;
+    
+    // For triangular presentation output mapping
+    if (targetModel === 'triangular') {
+        const estimatedMode = 3 * mean - min - max; // Estimation proxy for mode 'c'
+        logText += `Estimated Apex Mode (c)  : ${Math.max(min, Math.min(max, estimatedMode)).toFixed(3)}\n`;
+    }
     document.getElementById('c9-parameters-output').innerText = logText;
 
     // Direct automated heuristics text interpretation
@@ -364,6 +371,9 @@ function buildEmpiricalHistogramChart(values, model, min, max, mean, stdDev) {
     const steps = 60;
     const curveDelta = (max - min) / steps;
 
+    // Triangular parametric apex estimation bounds for rendering
+    const cEst = Math.max(min, Math.min(max, 3 * mean - min - max));
+
     for(let i=0; i<=steps; i++) {
         let currentX = min + i*curveDelta;
         curveLabels.push(currentX);
@@ -371,7 +381,19 @@ function buildEmpiricalHistogramChart(values, model, min, max, mean, stdDev) {
         let y = 0;
         if (model === 'uniform') {
             y = (currentX >= min && currentX <= max) ? (1 / (max - min)) : 0;
-        } else {
+        } else if (model === 'triangular') {
+            if (currentX >= min && currentX <= max) {
+                if (currentX < cEst) {
+                    y = (2 * (currentX - min)) / ((max - min) * (cEst - min));
+                } else if (currentX === cEst) {
+                    y = 2 / (max - min);
+                } else {
+                    y = (2 * (max - currentX)) / ((max - min) * (max - cEst));
+                }
+            } else {
+                y = 0;
+            }
+        } else { // Normal distribution path
             y = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-Math.pow(currentX - mean, 2) / (2 * stdDev * stdDev));
         }
         curvePoints.push(y);
