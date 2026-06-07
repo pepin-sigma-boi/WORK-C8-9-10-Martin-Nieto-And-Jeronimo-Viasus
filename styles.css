@@ -294,13 +294,155 @@ main { max-width: 1440px; margin: 2.5rem auto; padding: 0 1.75rem; }
  
 /* ── SLIDERS ─────────────────────────────────────────────────────────────── */
 .slider-input-group { display: flex; align-items: center; gap: 0.85rem; }
+ 
+/* Base reset for ALL range inputs */
 .slider-input-group input[type="range"] {
     flex: 1;
-    height: 4px;
+    height: 6px;
     cursor: pointer;
-    accent-color: var(--primary);
-    border-radius: 2px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
 }
+ 
+/* WebKit track */
+.slider-input-group input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface-3);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+ 
+/* WebKit thumb — default (for x1/x2 sliders outside params) */
+.slider-input-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 6px rgba(99,102,241,0.5);
+    margin-top: -5px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.slider-input-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 12px rgba(99,102,241,0.7);
+}
+ 
+/* Firefox track */
+.slider-input-group input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface-3);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.slider-input-group input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 6px rgba(99,102,241,0.5);
+    cursor: pointer;
+}
+ 
+/* ── PARAM SLIDERS — per-color track + thumb ─────────────────────────────── */
+/* param 1 — pink */
+#c8-params-container .form-group:nth-child(1) input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgba(244,114,182,0.35), rgba(244,114,182,0.12));
+    border-color: rgba(244,114,182,0.25);
+}
+#c8-params-container .form-group:nth-child(1) input[type="range"]::-webkit-slider-thumb {
+    background: var(--param-1);
+    box-shadow: 0 0 8px rgba(244,114,182,0.6);
+}
+#c8-params-container .form-group:nth-child(1) input[type="range"]::-moz-range-track {
+    background: linear-gradient(90deg, rgba(244,114,182,0.35), rgba(244,114,182,0.12));
+    border-color: rgba(244,114,182,0.25);
+}
+#c8-params-container .form-group:nth-child(1) input[type="range"]::-moz-range-thumb {
+    background: var(--param-1); box-shadow: 0 0 8px rgba(244,114,182,0.6);
+}
+ 
+/* param 2 — emerald */
+#c8-params-container .form-group:nth-child(2) input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgba(52,211,153,0.35), rgba(52,211,153,0.12));
+    border-color: rgba(52,211,153,0.25);
+}
+#c8-params-container .form-group:nth-child(2) input[type="range"]::-webkit-slider-thumb {
+    background: var(--param-2);
+    box-shadow: 0 0 8px rgba(52,211,153,0.6);
+}
+#c8-params-container .form-group:nth-child(2) input[type="range"]::-moz-range-track {
+    background: linear-gradient(90deg, rgba(52,211,153,0.35), rgba(52,211,153,0.12));
+    border-color: rgba(52,211,153,0.25);
+}
+#c8-params-container .form-group:nth-child(2) input[type="range"]::-moz-range-thumb {
+    background: var(--param-2); box-shadow: 0 0 8px rgba(52,211,153,0.6);
+}
+ 
+/* param 3 — amber */
+#c8-params-container .form-group:nth-child(3) input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgba(251,191,36,0.35), rgba(251,191,36,0.12));
+    border-color: rgba(251,191,36,0.25);
+}
+#c8-params-container .form-group:nth-child(3) input[type="range"]::-webkit-slider-thumb {
+    background: var(--param-3);
+    box-shadow: 0 0 8px rgba(251,191,36,0.6);
+}
+#c8-params-container .form-group:nth-child(3) input[type="range"]::-moz-range-track {
+    background: linear-gradient(90deg, rgba(251,191,36,0.35), rgba(251,191,36,0.12));
+    border-color: rgba(251,191,36,0.25);
+}
+#c8-params-container .form-group:nth-child(3) input[type="range"]::-moz-range-thumb {
+    background: var(--param-3); box-shadow: 0 0 8px rgba(251,191,36,0.6);
+}
+ 
+/* param 4 — blue */
+#c8-params-container .form-group:nth-child(4) input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgba(96,165,250,0.35), rgba(96,165,250,0.12));
+    border-color: rgba(96,165,250,0.25);
+}
+#c8-params-container .form-group:nth-child(4) input[type="range"]::-webkit-slider-thumb {
+    background: var(--param-4);
+    box-shadow: 0 0 8px rgba(96,165,250,0.6);
+}
+#c8-params-container .form-group:nth-child(4) input[type="range"]::-moz-range-track {
+    background: linear-gradient(90deg, rgba(96,165,250,0.35), rgba(96,165,250,0.12));
+    border-color: rgba(96,165,250,0.25);
+}
+#c8-params-container .form-group:nth-child(4) input[type="range"]::-moz-range-thumb {
+    background: var(--param-4); box-shadow: 0 0 8px rgba(96,165,250,0.6);
+}
+ 
+/* param 5 — violet */
+#c8-params-container .form-group:nth-child(5) input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, rgba(167,139,250,0.35), rgba(167,139,250,0.12));
+    border-color: rgba(167,139,250,0.25);
+}
+#c8-params-container .form-group:nth-child(5) input[type="range"]::-webkit-slider-thumb {
+    background: var(--param-5);
+    box-shadow: 0 0 8px rgba(167,139,250,0.6);
+}
+#c8-params-container .form-group:nth-child(5) input[type="range"]::-moz-range-track {
+    background: linear-gradient(90deg, rgba(167,139,250,0.35), rgba(167,139,250,0.12));
+    border-color: rgba(167,139,250,0.25);
+}
+#c8-params-container .form-group:nth-child(5) input[type="range"]::-moz-range-thumb {
+    background: var(--param-5); box-shadow: 0 0 8px rgba(167,139,250,0.6);
+}
+ 
+/* Hover glow on all param thumbs */
+#c8-params-container input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+    filter: brightness(1.2);
+}
+ 
 .slider-input-group input[type="number"] {
     width: 88px;
     padding: 0.4rem 0.5rem;
